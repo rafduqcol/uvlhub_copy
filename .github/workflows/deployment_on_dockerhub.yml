@@ -28,16 +28,16 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build and push Docker image
-        run: docker build --build-arg VERSION_TAG=${{ github.event.release.tag_name }} -t rafduqcol/uvlhub:${{ github.event.release.tag_name }} -f docker/images/Dockerfile.prod .
+        run: docker build --build-arg VERSION_TAG=${{ github.event.release.tag_name }} -t rafduqcol1/uvlhub:${{ github.event.release.tag_name }} -f docker/images/Dockerfile.prod .
         env:
           DOCKER_CLI_EXPERIMENTAL: enabled
 
       - name: Push Docker image to Docker Hub
-        run: docker push rafduqcol/uvlhub:${{ github.event.release.tag_name }}
+        run: docker push rafduqcol1/uvlhub:${{ github.event.release.tag_name }}
 
       - name: Tag and push latest
         run: |
-          docker tag rafduqcol/uvlhub:${{ github.event.release.tag_name }} rafduqcol/uvlhub:latest
-          docker push rafduqcol/uvlhub:latest
+          docker tag rafduqcol1/uvlhub:${{ github.event.release.tag_name }} rafduqcol1/uvlhub:latest
+          docker push rafduqcol1/uvlhub:latest
         env:
           DOCKER_CLI_EXPERIMENTAL: enabled
