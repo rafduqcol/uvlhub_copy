@@ -1,0 +1,42 @@
+name: Deploy to Render
+
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - main
+  push:
+        branches:
+        - main
+
+jobs:
+
+  deploy:
+    name: Deploy to Render
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v4
+
+      - name: Deploy to Render
+        env:
+          deploy_url: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+        run: |
+          curl "$deploy_url"
+
+  verify-deployment:
+    runs-on: ubuntu-latest
+    needs: deploy
+    steps:
+      - name: Wait for deployment to be ready
+        run: sleep 300
+
+      - name: Check Deployment Response
+        run: |
+          response=$(curl -s -o /dev/null -w "%{http_code}" https://uvlhub-practicas-tl0m.onrender.com)
+          if [ "$response" -ne 200 ]; then
+            echo "Deployment check failed with status code $response"
+            exit 1
+          else
+            echo "Deployment successful with status code $response"
+          fi
